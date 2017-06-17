@@ -65,6 +65,8 @@ screen_width = 640
 screen_height = 640
 screen = pygame.display.set_mode([screen_width, screen_height])
 myfont = pygame.font.SysFont("monospace", 16)
+youlose = pygame.font.SysFont("monospace", 100)
+
 # --- Sprite lists
 
 # This is a list of every sprite.
@@ -90,6 +92,7 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
+life = 10
 score = 0
 ammo = 30
 time_to_reload = 1000
@@ -106,11 +109,11 @@ while not done:
     times += 1
     # speed = times % 2
     level = times // 1800 + 1
-    speed = (level - 1) + times % 2
+    speed = (level + 1) + times % 2
 
     if times % 150 == 0:
         # This represents baloons:
-        for i in range(2):
+        for i in range(1):
             balloon = Balloon()
 
 
@@ -121,7 +124,6 @@ while not done:
             # Add the balloon to the list of objects
             balloon_list.add(balloon)
             all_sprites_list.add(balloon)
-
 
 
 
@@ -166,11 +168,11 @@ while not done:
         balloon_hit_list = pygame.sprite.spritecollide(bullet, balloon_list, True)
 
         # For each balloon hit, remove the bullet and add to the score
+
         for balloon in balloon_hit_list:
             bullet_list.remove(bullet)
             all_sprites_list.remove(bullet)
             score += 1
-
 
 
         # Remove the bullet if it flies up off the screen
@@ -178,15 +180,34 @@ while not done:
             bullet_list.remove(bullet)
             all_sprites_list.remove(bullet)
 
+    # calculate the number of lives left:
+
+    for balloon in balloon_list: # logic: a balloon must be removed after being added to balloon_out_list
+        balloon_out_list = pygame.sprite.Group()
+        if balloon.rect.y >= screen_height:
+            balloon_out_list.add(balloon)
+            balloon_list.remove(balloon)
+            all_sprites_list.remove(balloon)
+            life -= 1
+
+
+
+
+
+
     # --- Draw a frame
 
     # Clear the screen
     screen.fill(WHITE)
 
-    # Draw all the spites
+    # Draw all the spites & check lose
     all_sprites_list.draw(screen)
-    scoretext = myfont.render("Score = " + str(score) +" /Ammo =" + str(ammo) + " /Level = " + str(level), 1, (0, 0, 0))
+    scoretext = myfont.render("Life = " + str(life) + " /Score = " + str(score) +" /Ammo =" + str(ammo) + " /Level = " + str(level), 1, (0, 0, 0))
+
     screen.blit(scoretext, (5, 10))
+    if life == 0:
+        losetext = youlose.render("You Lose. Your Score Is: " + str(score), 1, (0, 0, 0))
+        screen.blit(youlose, (100, 100))
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
