@@ -97,6 +97,9 @@ reloading = False
 lastReloadTime = time.clock()
 times = 0
 # -------- Main Program Loop -----------
+
+
+
 while not done:
     # --- Event Processing
 
@@ -139,7 +142,7 @@ while not done:
                 ammo -= 1
                 bullet = Bullet()
                 bullet.rect.x = shooter.rect.x
-                bullet.rect.y = shooter.rect.y
+                bullet.rect.y = shooter.rect.y + pygame.Surface.get_size(shooter.image)[1]/2
                 all_sprites_list.add(bullet)
                 bullet_list.add(bullet)
 
@@ -171,7 +174,7 @@ while not done:
 
 
         # Remove the bullet if it flies up off the screen
-        if bullet.rect.y < -10:
+        if bullet.rect.x < 0:
             bullet_list.remove(bullet)
             all_sprites_list.remove(bullet)
 
