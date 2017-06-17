@@ -1,7 +1,7 @@
 import pygame
 import random
 import time
-
+import copy
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -65,7 +65,7 @@ screen_width = 640
 screen_height = 640
 screen = pygame.display.set_mode([screen_width, screen_height])
 myfont = pygame.font.SysFont("monospace", 16)
-youlose = pygame.font.SysFont("monospace", 100)
+youlose = pygame.font.SysFont("monospace", 50)
 
 # --- Sprite lists
 
@@ -172,7 +172,8 @@ while not done:
         for balloon in balloon_hit_list:
             bullet_list.remove(bullet)
             all_sprites_list.remove(bullet)
-            score += 1
+            if life > 0:
+                score += 1
 
 
         # Remove the bullet if it flies up off the screen
@@ -195,15 +196,21 @@ while not done:
 
     # Clear the screen
     screen.fill(WHITE)
-
     # Draw all the spites & check lose
     all_sprites_list.draw(screen)
     scoretext = myfont.render("Life = " + str(life) + " /Score = " + str(score) +" /Ammo =" + str(ammo) + " /Level = " + str(level), 1, (0, 0, 0))
 
     screen.blit(scoretext, (5, 10))
-    if life == 0:
-        losetext = youlose.render("You Lose. Your Score Is: " + str(score), 1, (0, 0, 0))
-        screen.blit(youlose, (100, 100))
+
+    if life <= 0:
+        screen.fill(WHITE)
+        losetext = youlose.render("You Lose", 1, (0, 0, 0))
+        finalscore = youlose.render("Your Score Is: " + str(score), 1, (0, 0, 0))
+        screen.blit(losetext, (100, 100))
+        screen.blit (finalscore, (100, 250))
+
+
+
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
