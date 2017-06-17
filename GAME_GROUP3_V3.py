@@ -109,11 +109,11 @@ while not done:
     times += 1
     # speed = times % 2
     level = times // 1800 + 1
-    speed = (level + 1) + times % 2
+    speed = (level - 1) + times % 2
 
     if times % 150 == 0:
         # This represents baloons:
-        for i in range(1):
+        for i in range(2):
             balloon = Balloon()
 
 
@@ -189,10 +189,6 @@ while not done:
             balloon_list.remove(balloon)
             all_sprites_list.remove(balloon)
             life -= 1
-
-
-
-
 
 
     # --- Draw a frame
